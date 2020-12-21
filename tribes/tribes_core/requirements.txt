@@ -1,0 +1,10 @@
+jwcrypto
+pytest
+pytest-django
+daphne
+pytest-mock
+requests
+django-ipfs-storage
+channels-redis
+pytest-asyncio
+

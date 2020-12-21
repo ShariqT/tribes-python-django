@@ -1,0 +1,4 @@
+**/__pycache__/
+*.pyc
+tribes_core/__pycache__/*.pyc
+tribes_core/__pycache__/models.cpython-38.pyc

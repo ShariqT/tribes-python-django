@@ -1,0 +1,41 @@
+version: '3.7'
+services:
+    jabber:
+        image: ejabberd/ecs
+        volumes: 
+            - ./jabber_db:/home/ejabberd/database
+    ipfs:
+        image: ipfs/go-ipfs
+        ports: 
+            - "4001:4001"
+            - "5001:5001"
+    redis:
+        image: redis
+    bgworker:
+        build:
+            context: ./
+            dockerfile: ./build_files/bgworker/Dockerfile
+        command: python3 manage.py runworker distribute_messages
+        links:
+            - redis
+    web:
+        build:
+            context: ./
+            dockerfile: ./build_files/web/Dockerfile
+        command: daphne -b 0.0.0.0 -p 8000 tribes_django.asgi:application
+        links:
+            - jabber
+            - redis
+        volumes: 
+            - "./tribes:/tribes"
+    nginx:
+        build:
+            context: ./
+            dockerfile: ./build_files/nginx/Dockerfile
+        command: [ "nginx", "-g", "daemon off;" ]
+        depends_on: 
+            - web
+            - ipfs
+        ports:
+            - "80:80"
+        

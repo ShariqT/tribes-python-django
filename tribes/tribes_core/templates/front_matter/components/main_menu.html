@@ -1,0 +1,41 @@
+<div id="horizontal-navigation-hover-centered" class="d-none d-lg-block mt-2 mt-lg-0">
+    <ul class="nav-main nav-main-horizontal nav-main-hover nav-main-horizontal-center">
+        <li class="nav-main-item">
+            <a class="nav-main-link {% if selected_menu == 'home' %} active {% endif %}" href="{% url 'Tribes:front-matter-index' %}">
+                <i class="nav-main-link-icon fa fa-home"></i>
+                <span class="nav-main-link-name">Home</span>
+            </a>
+        </li>
+        <li class="nav-main-item">
+            <a class="nav-main-link {% if selected_menu == 'config' %} active {% endif %}" href="{% url 'Tribes:front-matter-config-file' %}">
+                <i class="nav-main-link-icon fa fa-briefcase"></i>
+                <span class="nav-main-link-name">Edit Config File</span>
+            </a>
+        </li>
+        <li class="nav-main-item">
+            <a class="nav-main-link {% if selected_menu == 'page' %} active {% endif %}" href="#">
+                <i class="nav-main-link-icon fa fa-briefcase"></i>
+                <span class="nav-main-link-name">New Page</span>
+            </a>
+        </li>
+        <li class="nav-main-item">
+            <a class="nav-main-link {% if selected_menu == 'blog' %} active {% endif %}" href="#">
+                <i class="nav-main-link-icon fa fa-briefcase"></i>
+                <span class="nav-main-link-name">New Blog Post</span>
+            </a>
+        </li>
+        <li class="nav-main-item">
+            <a class="nav-main-link {% if selected_menu == 'drafts' %} active {% endif %}" href="#">
+                <i class="nav-main-link-icon fa fa-briefcase"></i>
+                <span class="nav-main-link-name">Drafts</span>
+            </a>
+        </li>
+        <li class="nav-main-item">
+            <a class="nav-main-link {% if selected_menu == 'publish' %} active {% endif %}" href="{% url 'Tribes:front-matter-publish' %}">
+                <i class="nav-main-link-icon fa fa-briefcase"></i>
+                <span class="nav-main-link-name">Publish</span>
+            </a>
+        </li>
+        
+    </ul>
+</div>

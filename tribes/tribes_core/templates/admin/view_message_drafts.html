@@ -1,0 +1,72 @@
+{% extends "admin/dashboard_base.html" %}
+
+{% block content %}
+<div class="block block-rounded">
+    <div class="block-content">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-vcenter">
+                <thead>
+                    <tr>
+                        <th>Date Saved</th>
+                        <th>Save Location</th>
+                        <th class="text-center" style="width: 100px;">
+                            Actions
+                        </th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for draft in drafts %}
+                    <tr>
+                        <td class="font-w600 font-size-sm">
+                            {{draft.date_saved}}
+                        </td>
+                        <td class="font-size-sm"><a href="{% url 'Tribes:view-message' draft.id %}">View</a></td>
+                        
+                        <td class="text-center">
+                            <div class="btn-group">
+                                <button type="button" data-draft-id="{{draft.id}}" id="delete-draft" class="btn btn-sm btn-alt-primary" data-toggle="tooltip" title="Delete">
+                                    <i class="fa fa-fw fa-times"></i>
+                                </button>
+                            </div>
+                        </td>
+
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% include "components/modals.html" %}
+{% endblock %}
+
+{% block extrafooter %}
+<script>
+    $(function() {
+        var CSRF_TOKEN = '{{ csrf_token }}';
+        $('button[id="delete-draft"]').on('click', function(){
+            var url = '{% url "Tribes:delete-draft" %}'
+            $.post(url, {'id': $(this).data('draft-id'), 'csrfmiddlewaretoken': CSRF_TOKEN})
+                .then(function(){
+                    displaySuccessModal('Draft Deleted!')
+                })
+                .catch(function(err) {
+                    displayErrorModal(err.toString())
+                })
+        })
+
+        function displayErrorModal(err){
+            $('div[id="error-content"]').html(err)
+            $('div[id="modal-block-error"]').modal('show')
+        }
+
+        function displaySuccessModal(msg){
+            $('div[id="success-content"]').html(msg)
+            $('div[id="modal-block-success"').modal('show')
+        }
+
+    });
+</script>
+
+{% endblock %}

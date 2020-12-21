@@ -1,0 +1,167 @@
+{% extends "admin/dashboard_base.html" %}
+
+{% block extrahead %}
+<!-- Theme included stylesheets -->
+<link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<link href="//cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet">
+<!-- Main Quill library -->
+<script src="//cdn.quilljs.com/1.3.6/quill.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="block block-rounded">
+            <div class="block-header block-header-default">
+                <h3 class="block-title">Write Something</h3>
+                <div class="block-options">
+                    <button type="button" id="save" class="btn btn-sm btn-dark">Save</button>
+                    <button type="button" id="publish" class="btn btn-sm btn-success">Publish</button>
+                </div>
+            </div>
+            <div class="block-content">
+                <form>
+                    <div class="form-group">
+                        <input type="text" id="messageTitle" class="form-control" placeholder="Title" />
+                    </div>
+                    <div class="form-group">
+                        <div id="editor"></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Pop In Block Modal Success -->
+<div class="modal fade" id="modal-block-success" tabindex="-1" role="dialog" aria-labelledby="modal-block-popin" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-popin" role="document">
+        <div class="modal-content">
+            <div class="block block-rounded block-themed block-transparent mb-0">
+                <div class="block-header bg-success">
+                    <h3 class="block-title">Modal Title</h3>
+                    <div class="block-options">
+                        <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
+                            <i class="fa fa-fw fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="block-content font-size-sm" id="success-content">
+                    
+                </div>
+                <div class="block-content block-content-full text-right border-top">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END Pop In Block Modal -->
+
+
+<!-- Pop In Block Modal Error -->
+<div class="modal fade" id="modal-block-error" tabindex="-1" role="dialog" aria-labelledby="modal-block-popin" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-popin" role="document">
+        <div class="modal-content">
+            <div class="block block-rounded block-themed block-transparent mb-0">
+                <div class="block-header bg-danger">
+                    <h3 class="block-title">Error!</h3>
+                    <div class="block-options">
+                        <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
+                            <i class="fa fa-fw fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="block-content font-size-sm" id="error-content">
+                    
+                </div>
+                <div class="block-content block-content-full text-right border-top">
+                    <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END Pop In Block Modal -->
+{% endblock %}
+
+{% block extrafooter %}
+<script>
+    $(function() {
+        console.log($)
+        var quill = new Quill('#editor', {
+        modules: {
+            toolbar: [
+                [{ 'header': [] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'font': [] }],
+                ['image']
+            ]
+        },
+        placeholder: 'What\'s good?',
+        theme: 'snow'
+        });
+
+        function getCurrentTitle(){
+            return $('input[id="messageTitle"]').val()
+        }
+
+        function getMessageBody(){
+            return quill.root.innerHTML
+        }
+
+        function displayErrorModal(err){
+            $('div[id="error-content"]').html(err)
+            $('div[id="modal-block-error"]').modal('show')
+        }
+
+        function displaySuccessModal(msg){
+            $('div[id="success-content"]').html(msg)
+            $('div[id="modal-block-success"').modal('show')
+        }
+
+        $('button[id="save"]').on('click', function(){
+            var title = getCurrentTitle()
+            var body = getMessageBody()
+            var CSRF_TOKEN = '{{ csrf_token }}';
+            if (body === "<p><br></p>") { //this is an empty editor in quill.js
+                displayErrorModal("Cannot save an empty message")
+                return
+            }
+            $.post('{% url "Tribes:save-message" %}', { 'content': body, 'csrfmiddlewaretoken': CSRF_TOKEN} )
+                .then(function(res){
+                    displaySuccessModal("Message saved in Drafts folder")
+                })
+                .catch(function(err){
+                    console.log(err)
+                    if (err.statusCode === 404) {
+                        displayErrorModal("API endpoint not found")
+                    }
+                    if (err.statusCode === 500) {
+                        displayErrorModal("System Error")
+                    }
+                    
+                })
+        });
+
+        $('button[id="publish"]').on('click', function(){
+            var title = getCurrentTitle()
+            var body = getMessageBody()
+            var CSRF_TOKEN = '{{ csrf_token }}';
+
+            $.post('{% url "Tribes:publish-message" %}', {'content': body, 'csrfmiddlewaretoken': CSRF_TOKEN })
+                .then(function(){
+                    displaySuccessModal("Post published and will be sent to all the people in your tribe")
+                    quill.deleteText(0, quill.getLength())
+                })
+                .catch(function(err){
+                    if (err.statusCode === 500) {
+                        displayErrorModal("System Error")
+                    }
+                })
+        })
+    });
+
+
+</script>
+{% endblock %}

@@ -1,0 +1,27 @@
+
+server {
+    listen 80 default_server;
+    location ~ "^/(ipfs|ipns|api)(/|$)" {
+        proxy_set_header Host "";
+        proxy_set_header X-Ipfs-Gateway-Prefix "";
+        proxy_pass http://ipfs:8080;
+    }
+    location /static/ {
+        root /var/www/html;
+    }
+    location /admin  {
+        rewrite ^/admin(.*)$ /portal$1 break;
+        proxy_pass http://web:8000/;
+    }
+
+    location /portal {
+        proxy_pass http://web:8000;
+    }
+    location /share {
+        rewrite ^/share(.*) /tribes$1 break;
+        proxy_pass http://web:8000/;
+    }
+    location / {
+        root /var/www/html;
+    }
+}

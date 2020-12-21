@@ -1,0 +1,20 @@
+# FROM debian:buster
+# RUN apt-get update 
+# RUN apt-get install -y python3
+# RUN apt-get install -y python3-pip
+# RUN apt-get install -y nginx
+# RUN apt-get install -y libnginx-mod-rtmp
+# RUN apt-get install -y ejabberd
+# WORKDIR /tribes
+# COPY . .
+# RUN pip3 install django
+# RUN pip3 install channels
+# RUN pip3 install django-extensions
+# RUN pip3 install -r ./tribes_core/requirements.txt
+# COPY ./default /etc/nginx/sites-available
+# # Append "daemon off;" to the beginning of the configuration
+# RUN echo "daemon off;" >> /etc/nginx/nginx.conf
+# # EXPOSE 80
+
+# # RUN daphne -b 0.0.0.0 -p 8080 tribes_django.asgi:application
+# # CMD [ "systemctl start nginx" ] 

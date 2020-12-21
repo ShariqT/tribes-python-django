@@ -1,0 +1,76 @@
+{% extends "admin/dashboard_base.html" %}
+{% load static %}
+
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="block block-rounded">
+            {% include "front_matter/components/main_menu.html" with selected_menu='publish' %}
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="block block-rounded">
+                <div class="block-header">
+                    <h3 class="block-title">System Console</h3>
+                <div class="block-options">
+                    <button type="button" class="btn-block-option">
+                        <i class="si si-settings"></i>
+                    </button>
+                </div></div>
+           <div class="block-content" id="sys-content">
+                
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block extrafooter %}
+    <script>
+const socket = new WebSocket("{{socket_url}}");
+$(function(){
+    var build = false
+    var doc = false
+
+    socket.addEventListener('open', function (event) {
+        console.log('connected!')
+        $('#sys-content').append("<p>Running jekyll doctor and jekyll build..</p>")
+        socket.send(JSON.stringify({'cmd': 'cd tribes_front_matter/src_web && jekyll doctor'}))
+        // socket.send(JSON.stringify({'cmd': 'cd tribes_front_matter/src_web && jekyll build'}))
+    });
+    socket.addEventListener('message', function(event) {
+        console.log("got something from server")
+        var data = JSON.parse(event.data)
+        console.log(data)
+        if (data['cmd_err']) {
+            if (data['cmd_err'] == 'doctor') {
+                $('#sys-content').append(data['output'])
+
+                $('#sys-content').append("<p><strong>Please fix configuration file errors!</strong></p>")
+            } else if (data['cmd_err'] == 'build') {
+                $('#sys-content').append(data['output'])
+
+                $('#sys-content').append("<p><strong>Build Failed!</strong></p>")
+            }
+        } else {
+            $('#sys-content').append(data['output'])
+            if (data['cmd_ok'] == 'build') {
+                build = true
+            }
+            if (data['cmd_ok'] == 'doctor') {
+                doctor = true
+                socket.send(JSON.stringify({'cmd': 'cd tribes_front_matter/src_web && jekyll build'}))
+            }
+        }
+    });
+    socket.addEventListener('error', function (error) {
+        console.log(error)
+        $('#sys-content').append(error.data['output'])
+    });
+})
+    </script>
+{% endblock %}

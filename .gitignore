@@ -1,0 +1,13 @@
+**/__pycache__/
+*.pyc
+tribes/tribes_core/__pycache__/*.pyc
+tribes/tribes_core/__pycache__/models.cpython-38.pyc
+tribes/tribes_front_matter/__pycache__/*.pyc
+.tribes/
+tribes/tribes_django/__pycache__/
+tribes/node_modules/
+tribes/.jekyll-cache/
+tribes/.pytest_cache/
+tribes/db.sqlite3
+tribes/testing.txt
+tribes/oldDockerfile.oldDockerfile

@@ -1,0 +1,46 @@
+{% extends "admin/dashboard_base.html" %}
+
+{% block content %}
+<div class="block block-rounded">
+    <div class="block-content">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-vcenter">
+                <thead>
+                    <tr>
+                        <th class="text-center" style="width: 100px;">
+                        </th>
+                        <th>Name</th>
+                        <th style="width: 30%;">Public Key</th>
+                        <th style="width: 15%;">Domain</th>
+                        <th class="text-center" style="width: 100px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-center">
+                            <i class="far fa-user"></i>
+                        </td>
+                        <td class="font-w600 font-size-sm">
+                            <a href="be_pages_generic_profile.html">Alice Moore</a>
+                        </td>
+                        <td class="font-size-sm">client1<em class="text-muted">@example.com</em></td>
+                        <td>
+                            <span class="badge badge-primary">Personal</span>
+                        </td>
+                        <td class="text-center">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-alt-primary" data-toggle="tooltip" title="Edit">
+                                    <i class="fa fa-fw fa-pencil-alt"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-alt-primary" data-toggle="tooltip" title="Delete">
+                                    <i class="fa fa-fw fa-times"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
