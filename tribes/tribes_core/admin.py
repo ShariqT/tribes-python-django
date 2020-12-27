@@ -4,6 +4,7 @@ from django.urls import path
 from tribes_core import models
 from tribes_core import views
 from tribes_front_matter import views as front_matter_views
+from tribes_storage import views as storage_views
 
 
 # Register your models here.
@@ -27,6 +28,7 @@ class TribesAdminSite(admin.AdminSite):
             url('front-matter/config', self.admin_view(front_matter_views.view_config), name='front-matter-config-file'),
             url('front-matter/publish', self.admin_view(front_matter_views.view_publish_feedback), name='front-matter-publish'),
             url('front-matter', self.admin_view(front_matter_views.index), name='front-matter-index'),
+            url('storage', self.admin_view(storage_views.index), name='storage-index')
 
         ]
         return tribe_urls + urls

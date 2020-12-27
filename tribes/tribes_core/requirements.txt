@@ -7,4 +7,6 @@ requests
 django-ipfs-storage
 channels-redis
 pytest-asyncio
+ipfshttpclient
+ipfs-api
 

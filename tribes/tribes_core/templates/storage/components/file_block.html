@@ -1,0 +1,22 @@
+<div class="block">
+    <div class="block-content">
+        {% if file_type == 'pdf' %}
+        <i class="far fa-2x fa-pdf"></i>
+        {% elif file_type == 'word' or file_type == 'txt' %}
+        <i class="far fa-2x fa-file-word"></i>
+        {% elif file_type == 'img' %}
+        <i class="far fa-2x fa-file-image"></i>
+        {% elif file_type == 'code' %}
+        <i class="far fa-2x fa-file-code"></i>
+        {% elif file_type == 'archive' %}
+        <i class="far fa-2x fa-file-archive"></i>
+        {% elif file_type == 'excel' %}
+        <i class="far fa-2x fa-file-excel"></i>
+        {% elif file_type == 'video' %}
+        <i class="far fa-2x fa-file-video"></i>
+        {% else %}
+        <i class="far fa-2x fa-file-"></i>
+        {% endif %}
+        <p>{{name}}</p>
+    </div>
+</div>

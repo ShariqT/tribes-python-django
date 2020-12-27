@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'channels',
     'tribes_core',
     'tribes_front_matter',
+    'tribes_storage',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -147,3 +148,10 @@ else:
             },
         }
     }
+
+if DEBUG is True:
+    IPFS_URL = 'http://127.0.0.1:5001'
+    IPFS_GATEWAY = 'http://localhost:8080'
+else:
+    IPFS_URL = 'http://ipfs:5001'
+    IPFS_GATEWAY = 'http://localhost/ipfs'
