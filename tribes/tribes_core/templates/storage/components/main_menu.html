@@ -1,13 +1,13 @@
 <div id="horizontal-navigation-hover-centered" class="d-none d-lg-block mt-2 mt-lg-0">
     <ul class="nav-main nav-main-horizontal nav-main-hover nav-main-horizontal-center">
         <li class="nav-main-item">
-            <a class="nav-main-link {% if selected_menu == 'home' %} active {% endif %}" href="{% url 'Tribes:front-matter-index' %}">
+            <a class="nav-main-link {% if selected_menu == 'home' %} active {% endif %}" href="{% url 'Tribes:storage-index' %}">
                 <i class="nav-main-link-icon fa fa-home"></i>
                 <span class="nav-main-link-name">Browse Files</span>
             </a>
         </li>
         <li class="nav-main-item">
-            <a class="nav-main-link {% if selected_menu == 'upload' %} active {% endif %}" href="{% url 'Tribes:front-matter-config-file' %}">
+            <a class="nav-main-link {% if selected_menu == 'upload' %} active {% endif %}" href="{% url 'Tribes:storage-upload' %}">
                 <i class="nav-main-link-icon fa fa-briefcase"></i>
                 <span class="nav-main-link-name">Upload New File/Folder</span>
             </a>

@@ -2,7 +2,9 @@ from urllib.parse import urlparse
 from tribes_django import settings
 import ipfshttpclient
 
-def convert_to_multihash(url):
+def convert_to_multihash(url=None):
+    if url is None:
+        url = 'http://localhost:5001'
     result = urlparse(url)
     return '/dns/{}/tcp/{}/{}'.format(result.hostname, result.port, result.scheme)
 

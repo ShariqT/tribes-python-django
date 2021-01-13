@@ -16,6 +16,7 @@ class TribesAdminSite(admin.AdminSite):
     def get_urls(self):
         urls = super().get_urls()
         tribe_urls = [
+
             url('generate_keys', self.admin_view(views.generate_keys), name='generate_keys'),
             url('new-post', self.admin_view(views.new_post), name='new-post'),
             url('save/message', self.admin_view(views.save_message), name='save-message'),
@@ -28,6 +29,8 @@ class TribesAdminSite(admin.AdminSite):
             url('front-matter/config', self.admin_view(front_matter_views.view_config), name='front-matter-config-file'),
             url('front-matter/publish', self.admin_view(front_matter_views.view_publish_feedback), name='front-matter-publish'),
             url('front-matter', self.admin_view(front_matter_views.index), name='front-matter-index'),
+            url('storage/upload', self.admin_view(storage_views.upload_view), name='storage-upload'),
+            url('storage/create_path', self.admin_view(storage_views.create_path), name='storage-create-path'),
             url('storage', self.admin_view(storage_views.index), name='storage-index')
 
         ]

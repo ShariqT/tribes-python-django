@@ -1,0 +1,36 @@
+{% extends "admin/dashboard_base.html" %}
+{% load static %}
+
+{% block extrahead %}
+<script src="{% static 'js/dropzone/dropzone.js' %}"></script>
+<link rel='stylesheet' href="{% static 'css/dropzone.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="block block-rounded">
+            {% include "storage/components/main_menu.html" with selected_menu='upload' %}
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="block block-rounded">
+            <div class="block-content">
+                <form action="{% url 'Tribes:storage-upload' %}"
+                class="dropzone"
+                id="my-awesome-dropzone">
+                {% csrf_token %}
+                </form>
+            </div>
+           
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrafooter %}
+<script>
+</script>
+{% endblock %}

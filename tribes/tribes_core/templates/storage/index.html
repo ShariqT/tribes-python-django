@@ -8,5 +8,146 @@
         </div>
     </div>
 </div>
+<div class="row">
+    <div class="col-md-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb push">
+                {% for p in path_info %}
+                <li class="breadcrumb-item">
+                    {% if p.name == 'Root' %}
+                    <a href="{% url 'Tribes:storage-index' %}">Root</a>
+                    {% else %}
+                    <a href="{% url 'Tribes:storage-index' %}?path={{p.absolute_path}}">{{p.name}}</a>
 
+                    {% endif %}
+                </li>
+                {% endfor %}
+                
+            </ol>
+        </nav>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="btn-group mb-3" role="group" aria-label="Horizontal Alternate Secondary">
+            <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#createfolder">Create New Folder</button>
+            <button type="button" class="btn btn-outline-secondary">Add File</button>
+        </div>
+    </div>
+</div>
+{% if files|length > 0 %}
+    <div class="row">
+        <div class="col-md-9">
+            {% for file_row in files %}
+                <div class="row">
+                {% for file_entry in file_row %}
+                    {% if file_entry.Type == 0 %}
+                        <div class="col-md-2">
+                        {% include "storage/components/directory_block.html" with fileinfo=file_entry %}
+                        </div>
+                    {% else %}
+                        <div class="col-md-2">
+                            {% include "storage/components/file_block.html" with fileinfo=file_entry %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+        <div class="col-md-3">
+            <div class="block block-rounded">
+                <div class="block-content">
+                    {% if active_path == None %}
+                    Active Path: Root
+                    {% else %}
+                    Active Path: {{active_path}}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+{% else %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-info d-flex align-items-center" role="alert">
+                <div class="flex-00-auto">
+                    <i class="fa fa-fw fa-info-circle"></i>
+                </div>
+                <div class="flex-fill ml-3">
+                    <p class="mb-0">No Files Found! <a class="alert-link" href="{% url 'Tribes:storage-upload' %}">Add A file by going here!</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<div class="modal" id="createfolder" tabindex="-1" aria-labelledby="modal-block-small" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="block block-rounded block-themed block-transparent mb-0">
+                <div class="block-header bg-primary-dark">
+                    <h3 class="block-title">Create New Folder</h3>
+                    <div class="block-options">
+                        <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
+                            <i class="fa fa-fw fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="block-content font-size-sm">
+                    <form action="{% url 'Tribes:storage-create-path' %}" method="POST" id="new_folder_form">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="example-text-input">Path</label>
+                            <input type="hidden" name="active_path" value="{{active_path}}" />
+                            <input type="text" class="form-control" id="example-text-input" name="path" placeholder="New Path">
+                        </div>
+                    </form>                
+                </div>
+                <div class="block-content block-content-full text-right border-top">
+                    <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
+                    <button type="button" id="submit_new_folder" class="btn btn-primary">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" id="modal-block-extra-large" tabindex="-1" aria-labelledby="modal-block-extra-large" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="block block-rounded block-themed block-transparent mb-0">
+                <div class="block-header bg-primary-dark">
+                    <h3 class="block-title">Modal Title</h3>
+                    <div class="block-options">
+                        <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
+                            <i class="fa fa-fw fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="block-content font-size-sm">
+                    <p>Potenti elit lectus augue eget iaculis vitae etiam, ullamcorper etiam bibendum ad feugiat magna accumsan dolor, nibh molestie cras hac ac ad massa, fusce ante convallis ante urna molestie vulputate bibendum tempus ante justo arcu erat accumsan adipiscing risus, libero condimentum venenatis sit nisl nisi ultricies sed, fames aliquet consectetur consequat nostra molestie neque nullam scelerisque neque commodo turpis quisque etiam egestas vulputate massa, curabitur tellus massa venenatis congue dolor enim integer luctus, nisi suscipit gravida fames quis vulputate nisi viverra luctus id leo dictum lorem, inceptos nibh orci.</p>
+                    <p>Potenti elit lectus augue eget iaculis vitae etiam, ullamcorper etiam bibendum ad feugiat magna accumsan dolor, nibh molestie cras hac ac ad massa, fusce ante convallis ante urna molestie vulputate bibendum tempus ante justo arcu erat accumsan adipiscing risus, libero condimentum venenatis sit nisl nisi ultricies sed, fames aliquet consectetur consequat nostra molestie neque nullam scelerisque neque commodo turpis quisque etiam egestas vulputate massa, curabitur tellus massa venenatis congue dolor enim integer luctus, nisi suscipit gravida fames quis vulputate nisi viverra luctus id leo dictum lorem, inceptos nibh orci.</p>
+                    <p>Potenti elit lectus augue eget iaculis vitae etiam, ullamcorper etiam bibendum ad feugiat magna accumsan dolor, nibh molestie cras hac ac ad massa, fusce ante convallis ante urna molestie vulputate bibendum tempus ante justo arcu erat accumsan adipiscing risus, libero condimentum venenatis sit nisl nisi ultricies sed, fames aliquet consectetur consequat nostra molestie neque nullam scelerisque neque commodo turpis quisque etiam egestas vulputate massa, curabitur tellus massa venenatis congue dolor enim integer luctus, nisi suscipit gravida fames quis vulputate nisi viverra luctus id leo dictum lorem, inceptos nibh orci.</p>
+                </div>
+                <div class="block-content block-content-full text-right border-top">
+                    <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrafooter %}
+    <script>
+        $(function(){
+            console.log('adad')
+            $('#submit_new_folder').on('click', function(evt){
+                $('#new_folder_form').submit();
+            })
+        })
+    </script>
 {% endblock %}

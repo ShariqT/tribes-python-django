@@ -1,6 +1,11 @@
 <div class="block">
     <div class="block-content">
         <i class="far fa-2x fa-folder"></i>
-        <p>{{name}}</p>
+        {% if fileinfo.Name != '/' %}
+        <p><a href="{% url 'Tribes:storage-index'%}?path={{fileinfo.Path}}">{{fileinfo.Name}}</a></p>
+        {% else %}
+        <p><a href="{% url 'Tribes:storage-index'%}">/</a></p>
+
+        {% endif %}
     </div>
 </div>
