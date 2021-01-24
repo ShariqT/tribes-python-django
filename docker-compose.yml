@@ -40,4 +40,6 @@ services:
             - ipfs
         ports:
             - "80:80"
+        volumes: 
+            - "./LOCAL_STATIC:/var/www/html/static"
         

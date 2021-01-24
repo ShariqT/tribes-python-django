@@ -15,3 +15,4 @@ EXPOSE 8000
 ENV DJANGO_SETTINGS_MODULE=tribes_django.settings
 RUN pip3 install -r ./tribes_core/requirements.txt
 RUN python3 manage.py migrate
+RUN python3 manage.py collectstatic --noinput

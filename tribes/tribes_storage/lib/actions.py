@@ -4,7 +4,7 @@ import ipfshttpclient
 
 def convert_to_multihash(url=None):
     if url is None:
-        url = 'http://localhost:5001'
+        url = settings.IPFS_URL
     result = urlparse(url)
     return '/dns/{}/tcp/{}/{}'.format(result.hostname, result.port, result.scheme)
 
