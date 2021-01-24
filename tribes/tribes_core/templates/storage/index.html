@@ -1,4 +1,12 @@
 {% extends "admin/dashboard_base.html" %}
+{% load static %}
+
+
+{% block extrahead %}
+    <script src="{% static 'js/dropzone/dropzone.js' %}"></script>
+    <link rel='stylesheet' href="{% static 'css/dropzone.css' %}" />
+{% endblock %}
+
 
 {% block content %}
 <div class="row">
@@ -31,7 +39,7 @@
     <div class="col-md-12">
         <div class="btn-group mb-3" role="group" aria-label="Horizontal Alternate Secondary">
             <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#createfolder">Create New Folder</button>
-            <button type="button" class="btn btn-outline-secondary">Add File</button>
+            <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#addfile">Add File</button>
         </div>
     </div>
 </div>
@@ -41,7 +49,7 @@
             {% for file_row in files %}
                 <div class="row">
                 {% for file_entry in file_row %}
-                    {% if file_entry.Type == 0 %}
+                    {% if file_entry.Type == 'directory' %}
                         <div class="col-md-2">
                         {% include "storage/components/directory_block.html" with fileinfo=file_entry %}
                         </div>
@@ -69,13 +77,24 @@
     
 {% else %}
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-9">
             <div class="alert alert-info d-flex align-items-center" role="alert">
                 <div class="flex-00-auto">
                     <i class="fa fa-fw fa-info-circle"></i>
                 </div>
                 <div class="flex-fill ml-3">
-                    <p class="mb-0">No Files Found! <a class="alert-link" href="{% url 'Tribes:storage-upload' %}">Add A file by going here!</a></p>
+                    <p class="mb-0">No Files Found! </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="block block-rounded">
+                <div class="block-content">
+                    {% if active_path == None %}
+                    Active Path: Root
+                    {% else %}
+                    Active Path: {{active_path}}
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -95,6 +114,7 @@
                     </div>
                 </div>
                 <div class="block-content font-size-sm">
+                    <div id="errPath" class="alert alert-danger" style="display:none">Invalid Path name </div>
                     <form action="{% url 'Tribes:storage-create-path' %}" method="POST" id="new_folder_form">
                         {% csrf_token %}
                         <div class="form-group">
@@ -114,12 +134,12 @@
 </div>
 
 
-<div class="modal" id="modal-block-extra-large" tabindex="-1" aria-labelledby="modal-block-extra-large" style="display: none;" aria-hidden="true">
+<div class="modal" id="addfile" tabindex="-1" aria-labelledby="modal-block-extra-large" style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="block block-rounded block-themed block-transparent mb-0">
                 <div class="block-header bg-primary-dark">
-                    <h3 class="block-title">Modal Title</h3>
+                    <h3 class="block-title">Upload File</h3>
                     <div class="block-options">
                         <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
                             <i class="fa fa-fw fa-times"></i>
@@ -127,13 +147,19 @@
                     </div>
                 </div>
                 <div class="block-content font-size-sm">
-                    <p>Potenti elit lectus augue eget iaculis vitae etiam, ullamcorper etiam bibendum ad feugiat magna accumsan dolor, nibh molestie cras hac ac ad massa, fusce ante convallis ante urna molestie vulputate bibendum tempus ante justo arcu erat accumsan adipiscing risus, libero condimentum venenatis sit nisl nisi ultricies sed, fames aliquet consectetur consequat nostra molestie neque nullam scelerisque neque commodo turpis quisque etiam egestas vulputate massa, curabitur tellus massa venenatis congue dolor enim integer luctus, nisi suscipit gravida fames quis vulputate nisi viverra luctus id leo dictum lorem, inceptos nibh orci.</p>
-                    <p>Potenti elit lectus augue eget iaculis vitae etiam, ullamcorper etiam bibendum ad feugiat magna accumsan dolor, nibh molestie cras hac ac ad massa, fusce ante convallis ante urna molestie vulputate bibendum tempus ante justo arcu erat accumsan adipiscing risus, libero condimentum venenatis sit nisl nisi ultricies sed, fames aliquet consectetur consequat nostra molestie neque nullam scelerisque neque commodo turpis quisque etiam egestas vulputate massa, curabitur tellus massa venenatis congue dolor enim integer luctus, nisi suscipit gravida fames quis vulputate nisi viverra luctus id leo dictum lorem, inceptos nibh orci.</p>
-                    <p>Potenti elit lectus augue eget iaculis vitae etiam, ullamcorper etiam bibendum ad feugiat magna accumsan dolor, nibh molestie cras hac ac ad massa, fusce ante convallis ante urna molestie vulputate bibendum tempus ante justo arcu erat accumsan adipiscing risus, libero condimentum venenatis sit nisl nisi ultricies sed, fames aliquet consectetur consequat nostra molestie neque nullam scelerisque neque commodo turpis quisque etiam egestas vulputate massa, curabitur tellus massa venenatis congue dolor enim integer luctus, nisi suscipit gravida fames quis vulputate nisi viverra luctus id leo dictum lorem, inceptos nibh orci.</p>
+                    <form action="{% url 'Tribes:storage-upload' %}"
+                        class="dropzone"
+                        id="my-awesome-dropzone">
+                            {% if active_path == None %}
+                                <input type="hidden" name="currentPath" value="/" />
+                            {% else %}
+                                <input type="hidden" name="currentPath" value="{{active_path}}" />
+                            {% endif %}
+                        {% csrf_token %}
+                    </form>
                 </div>
                 <div class="block-content block-content-full text-right border-top">
                     <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
                 </div>
             </div>
         </div>
@@ -145,8 +171,20 @@
     <script>
         $(function(){
             console.log('adad')
+            
             $('#submit_new_folder').on('click', function(evt){
+                $('#errPath').html("");
+                $('#errPath').hide();
+                let p = $('#new_folder_form input[name=path]').val()
+                if(p.includes(".")){
+                    $('#errPath').html("Invalid Path Name (periods not allowed) ")
+                    $('#errPath').show();
+                } else if (p == '') {
+                    $('#errPath').html("Invalid Path Name (no empty strings)")
+                    $('#errPath').show()
+                } else {
                 $('#new_folder_form').submit();
+                }
             })
         })
     </script>

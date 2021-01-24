@@ -1,22 +1,35 @@
 <div class="block">
-    <div class="block-content">
-        {% if file_type == 'pdf' %}
+    <div class="block-options">
+        <div class="dropdown">
+            <button type="button" class="btn-block-option dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Settings</button>
+            <div class="dropdown-menu dropdown-menu-right font-size-sm">
+                <a class="dropdown-item" href="">
+                    <i class="fa fa-fw fa-file-download mr-1"></i> Download
+                </a>
+                <a class="dropdown-item" href="javascript:void(0)">
+                    <i class="fa fa-fw fa-share-alt mr-1"></i> Share
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="block-content" style="overflow-wrap:anywhere">
+        {% if fileinfo.Type == 'pdf' %}
         <i class="far fa-2x fa-pdf"></i>
-        {% elif file_type == 'word' or file_type == 'txt' %}
+        {% elif fileinfo.Type == 'word' or fileinfo.Type == 'txt' %}
         <i class="far fa-2x fa-file-word"></i>
-        {% elif file_type == 'img' %}
+        {% elif fileinfo.Type == 'img' %}
         <i class="far fa-2x fa-file-image"></i>
-        {% elif file_type == 'code' %}
+        {% elif fileinfo.Type == 'code' %}
         <i class="far fa-2x fa-file-code"></i>
-        {% elif file_type == 'archive' %}
+        {% elif fileinfo.Type == 'archive' %}
         <i class="far fa-2x fa-file-archive"></i>
-        {% elif file_type == 'excel' %}
+        {% elif fileinfo.Type == 'excel' %}
         <i class="far fa-2x fa-file-excel"></i>
-        {% elif file_type == 'video' %}
+        {% elif fileinfo.Type == 'video' %}
         <i class="far fa-2x fa-file-video"></i>
         {% else %}
         <i class="far fa-2x fa-file"></i>
         {% endif %}
-        <p>{{name}}</p>
+        <p>{{fileinfo.Name}}</p>
     </div>
 </div>
